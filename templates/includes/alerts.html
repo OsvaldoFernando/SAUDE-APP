@@ -1,0 +1,91 @@
+{% if messages %}
+<div class="alerts-container">
+    {% for message in messages %}
+        {% if message.tags == 'error' or message.tags == 'danger' %}
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <span style="font-size: 1.3rem; margin-right: 10px;">❌</span>
+                <div>
+                    <strong>Erro:</strong> {{ message }}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        {% elif message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                <span style="font-size: 1.3rem; margin-right: 10px;">✅</span>
+                <div>
+                    <strong>Sucesso:</strong> {{ message }}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        {% elif message.tags == 'warning' %}
+            <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
+                <span style="font-size: 1.3rem; margin-right: 10px;">⚠️</span>
+                <div>
+                    <strong>Aviso:</strong> {{ message }}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        {% elif message.tags == 'info' %}
+            <div class="alert alert-info alert-dismissible fade show d-flex align-items-center" role="alert">
+                <span style="font-size: 1.3rem; margin-right: 10px;">ℹ️</span>
+                <div>
+                    <strong>Informação:</strong> {{ message }}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        {% else %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+    .alerts-container {
+        margin-bottom: 20px;
+        animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .alert {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 4px solid #28a745;
+    }
+    
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border-left: 4px solid #17a2b8;
+    }
+</style>

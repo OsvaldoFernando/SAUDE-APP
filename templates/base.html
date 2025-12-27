@@ -41,14 +41,7 @@
     </nav>
 
     <div class="container-fluid">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
+        {% include 'includes/alerts.html' %}
 
         {% block content %}{% endblock %}
     </div>
