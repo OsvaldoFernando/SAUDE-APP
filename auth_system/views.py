@@ -112,10 +112,15 @@ def login_view(request):
                 messages.error(request, '⚠️ Erro ao processar login. Tente novamente.')
         
         else:
-            # Form has errors
-            pass
+            # Form has errors, re-render with form errors
+            return render(request, 'auth/login.html', {'form': form})
     
-    return render(request, 'auth/login.html')
+    else:
+        # GET request - create empty form
+        from .forms import LoginForm
+        form = LoginForm()
+    
+    return render(request, 'auth/login.html', {'form': form})
 
 @login_required(login_url='login')
 def logout_view(request):

@@ -1,0 +1,56 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+
+{% block title %}
+    🏥 {{ block.super }}
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <h1>
+        <a href="{% url 'admin:index' %}">
+            🏥 <strong>Hospital de Malanje</strong>
+            <span style="font-size: 0.8em; color: #666;">Sistema de Gestão de Consultas</span>
+        </a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+    #site-name h1 {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    #site-name h1 a {
+        color: #1e3c72;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    #site-name h1 a:hover {
+        color: #2a5298;
+    }
+    
+    .module h2 {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .model-list a {
+        color: #1e3c72;
+    }
+    
+    .model-list a:hover {
+        color: #2a5298;
+    }
+</style>
+{% endblock %}
