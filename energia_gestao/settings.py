@@ -34,6 +34,19 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.repl.co',
 ]
 
+# Security Settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_SECURITY_POLICY = {
+    'default-src': ("'self'",),
+    'script-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'),
+    'style-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'),
+    'img-src': ("'self'", 'data:', 'https:'),
+}
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,6 +73,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'auth_system.middleware.SecurityHeadersMiddleware',
+    'auth_system.middleware.ActivityLogMiddleware',
 ]
 
 ROOT_URLCONF = 'energia_gestao.urls'
@@ -122,6 +137,16 @@ TIME_ZONE = 'Africa/Luanda'
 USE_I18N = True
 
 USE_TZ = True
+
+# Session Security Settings
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Strict'
 
 
 # Static files (CSS, JavaScript, Images)
