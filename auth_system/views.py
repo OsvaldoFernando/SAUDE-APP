@@ -31,11 +31,12 @@ def log_activity(request, action, resource='', details=''):
 
 @require_http_methods(["GET", "POST"])
 def login_view(request):
+    from .forms import LoginForm
+    
     if request.user.is_authenticated:
         return redirect('home')
     
     if request.method == 'POST':
-        from .forms import LoginForm
         form = LoginForm(request.POST)
         
         if form.is_valid():
@@ -44,80 +45,77 @@ def login_view(request):
             ip_address = get_client_ip(request)
             
             # Log the login attempt
-            LoginAttempt.objects.create(
-                username=username,
-                ip_address=ip_address,
-                user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
-                success=False
-            )
-            
-            # Check if user exists
             try:
-                user = authenticate(request, username=username, password=password)
+                LoginAttempt.objects.create(
+                    username=username,
+                    ip_address=ip_address,
+                    user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
+                    success=False
+                )
+            except Exception as e:
+                pass
+            
+            # Authenticate user
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                # Check if user account is active
+                if not user.is_active:
+                    messages.error(request, '❌ Conta desativada. Contacte o administrador do sistema.')
+                    return render(request, 'auth/login.html', {'form': form})
                 
-                if user is not None:
-                    # Check if user account is active
-                    if not user.is_active:
-                        messages.error(request, '❌ Conta desativada. Contacte o administrador do sistema.')
-                        log_activity(request, 'LOGIN', username, 'Tentativa com conta desativada')
+                # Check user profile lock status
+                if hasattr(user, 'profile'):
+                    if user.profile.is_locked:
+                        minutes_remaining = int((user.profile.locked_until - timezone.now()).total_seconds() / 60)
+                        messages.error(request, f'🔒 Conta bloqueada por segurança. Tente novamente em {minutes_remaining} minuto(s).')
                         return render(request, 'auth/login.html', {'form': form})
                     
-                    # Check user profile lock status
-                    if hasattr(user, 'profile'):
-                        if user.profile.is_locked:
-                            minutes_remaining = int((user.profile.locked_until - timezone.now()).total_seconds() / 60)
-                            messages.error(request, f'🔒 Conta bloqueada por segurança. Tente novamente em {minutes_remaining} minuto(s).')
-                            log_activity(request, 'LOGIN', username, f'Tentativa com conta bloqueada')
-                            return render(request, 'auth/login.html', {'form': form})
-                        
-                        # Reset failed attempts on successful login
-                        user.profile.reset_failed_attempts()
-                        user.profile.last_login_ip = ip_address
-                        user.profile.last_login_time = timezone.now()
-                        user.profile.save()
-                    
-                    # Update login attempt as successful
-                    LoginAttempt.objects.filter(
+                    # Reset failed attempts on successful login
+                    user.profile.reset_failed_attempts()
+                    user.profile.last_login_ip = ip_address
+                    user.profile.last_login_time = timezone.now()
+                    user.profile.save()
+                
+                # Mark login attempt as successful
+                try:
+                    login_attempt = LoginAttempt.objects.filter(
                         username=username,
                         ip_address=ip_address
-                    ).order_by('-timestamp').first().update(success=True)
-                    
-                    login(request, user)
-                    log_activity(request, 'LOGIN', username, f'Login bem-sucedido do IP {ip_address}')
-                    messages.success(request, f'✅ Bem-vindo, {user.first_name or user.username}!')
-                    return redirect('home')
-                else:
-                    # Failed login attempt
-                    try:
-                        user = User.objects.get(username=username)
-                        if hasattr(user, 'profile'):
-                            user.profile.failed_login_attempts += 1
-                            
-                            # Lock account after 5 failed attempts
-                            if user.profile.failed_login_attempts >= 5:
-                                user.profile.locked_until = timezone.now() + timedelta(minutes=15)
-                                messages.error(request, '🔒 Conta bloqueada por segurança após 5 tentativas falhadas. Tente novamente em 15 minutos.')
-                                log_activity(request, 'LOGIN', username, 'Conta bloqueada após 5 tentativas falhadas')
-                            else:
-                                attempts_left = 5 - user.profile.failed_login_attempts
-                                messages.error(request, f'❌ Utilizador ou senha inválidos. Tem mais {attempts_left} tentativa(s) disponível(is).')
-                                log_activity(request, 'LOGIN', username, f'Tentativa falhada ({user.profile.failed_login_attempts}/5)')
-                            
-                            user.profile.save()
-                    except User.DoesNotExist:
-                        messages.error(request, '❌ Utilizador ou senha inválidos.')
-                        log_activity(request, 'LOGIN', username, 'Utilizador não encontrado')
-            
-            except Exception as e:
-                messages.error(request, '⚠️ Erro ao processar login. Tente novamente.')
-        
+                    ).order_by('-timestamp').first()
+                    if login_attempt:
+                        login_attempt.success = True
+                        login_attempt.save()
+                except Exception as e:
+                    pass
+                
+                login(request, user)
+                messages.success(request, f'✅ Bem-vindo, {user.first_name or user.username}!')
+                return redirect('home')
+            else:
+                # Failed login attempt
+                try:
+                    user = User.objects.get(username=username)
+                    if hasattr(user, 'profile'):
+                        user.profile.failed_login_attempts += 1
+                        
+                        # Lock account after 5 failed attempts
+                        if user.profile.failed_login_attempts >= 5:
+                            user.profile.locked_until = timezone.now() + timedelta(minutes=15)
+                            messages.error(request, '🔒 Conta bloqueada por segurança. Tente novamente em 15 minutos.')
+                        else:
+                            attempts_left = 5 - user.profile.failed_login_attempts
+                            messages.error(request, f'❌ Utilizador ou senha inválidos. Tem mais {attempts_left} tentativa(s).')
+                        
+                        user.profile.save()
+                except User.DoesNotExist:
+                    messages.error(request, '❌ Utilizador ou senha inválidos.')
         else:
-            # Form has errors, re-render with form errors
-            return render(request, 'auth/login.html', {'form': form})
+            # Form validation errors
+            pass
     
     else:
-        # GET request - create empty form
-        from .forms import LoginForm
+        # GET request
         form = LoginForm()
     
     return render(request, 'auth/login.html', {'form': form})
