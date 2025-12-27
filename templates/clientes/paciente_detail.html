@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Paciente{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>👤 {{ paciente.nome }}</h1>
+        <div>
+            {% if request.user.profile.role in 'ADMIN,RECEPTIONIST' %}
+            <a href="{% url 'paciente_update' paciente.pk %}" class="btn btn-warning">✏️ Editar</a>
+            {% endif %}
+            <a href="{% url 'pacientes_list' %}" class="btn btn-secondary">← Voltar</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📋 Informações Pessoais</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nº Paciente:</strong> {{ paciente.numero_cliente }}</p>
+                            <p><strong>NIF:</strong> {{ paciente.nif }}</p>
+                            <p><strong>BI:</strong> {{ paciente.bi }}</p>
+                            <p><strong>Telefone:</strong> {{ paciente.telefone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> {{ paciente.email|default:"Não informado" }}</p>
+                            <p><strong>Status:</strong> 
+                                <span class="badge {% if paciente.status == 'ATIVO' %}bg-success{% elif paciente.status == 'INATIVO' %}bg-secondary{% else %}bg-warning{% endif %}">
+                                    {{ paciente.get_status_display }}
+                                </span>
+                            </p>
+                            <p><strong>Tipo:</strong> {{ paciente.get_tipo_cliente_display }}</p>
+                            <p><strong>Saldo:</strong> <strong>AOA {{ paciente.saldo_atual|floatformat:2 }}</strong></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p><strong>Morada:</strong></p>
+                            <p>{{ paciente.morada }}</p>
+                        </div>
+                    </div>
+                    {% if paciente.observacoes %}
+                    <div class="row">
+                        <div class="col-12">
+                            <p><strong>Observações:</strong></p>
+                            <p>{{ paciente.observacoes }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <hr>
+                    <p class="text-muted mb-0">
+                        <small>Registado em: {{ paciente.data_cadastro|date:"d/m/Y H:i" }} | Atualizado em: {{ paciente.data_atualizacao|date:"d/m/Y H:i" }}</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">📊 Informações Adicionais</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Contratos:</strong> <span class="badge bg-info">{{ contratos|length }}</span></p>
+                    <p><strong>Contratos Ativos:</strong> <span class="badge bg-success">{{ contratos|dictsort:"status"|length }}</span></p>
+                    <a href="{% url 'contratos_list' paciente.pk %}" class="btn btn-sm btn-info w-100">📜 Ver Contratos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if contratos %}
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">📜 Contratos Recentes</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th>
+                        <th>Status</th>
+                        <th>Data Início</th>
+                        <th>Data Fim</th>
+                        <th>Tarifa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contrato in contratos|slice:":5" %}
+                    <tr>
+                        <td>{{ contrato.codigo_contrato }}</td>
+                        <td><span class="badge {% if contrato.status == 'ATIVO' %}bg-success{% elif contrato.status == 'CANCELADO' %}bg-danger{% else %}bg-warning{% endif %}">{{ contrato.get_status_display }}</span></td>
+                        <td>{{ contrato.data_inicio|date:"d/m/Y" }}</td>
+                        <td>{{ contrato.data_fim|date:"d/m/Y"|default:"Ativo" }}</td>
+                        <td>AOA {{ contrato.tarifa_kwh|floatformat:2 }}/kWh</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
