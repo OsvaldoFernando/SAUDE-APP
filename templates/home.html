@@ -1,32 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital de Malanje - Sistema de Gestão de Consultas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; }
-        .card { border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .stat-card { transition: transform 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); }
-        .navbar-brand { font-size: 1.5rem; font-weight: bold; }
-        .header-hospital { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
-        .stat-value { font-size: 2.5rem; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="/">🏥 Hospital de Malanje - Sistema de Consultas</a>
-            <div>
-                <a href="/admin/" class="btn btn-outline-light btn-sm">Admin</a>
-                <a href="/dashboard/" class="btn btn-outline-light btn-sm">Dashboard</a>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="container">
+{% block content %}
+<div class="container">
         <div class="header-hospital text-center">
             <h1 class="display-4 mb-3">Hospital de Malanje</h1>
             <p class="lead mb-0">Sistema Web Integral de Gestão e Controlo de Consultas</p>
@@ -120,8 +95,14 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<style>
+    body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; }
+    .card { border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .stat-card { transition: transform 0.3s; }
+    .stat-card:hover { transform: translateY(-5px); }
+    .header-hospital { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
+    .stat-value { font-size: 2.5rem; font-weight: bold; }
+</style>
+{% endblock %}

@@ -19,8 +19,11 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from energia_gestao import views
+from auth_system import views as auth_views
 
 urlpatterns = [
+    path('login/', auth_views.login_view, name='login'),
+    path('logout/', auth_views.logout_view, name='logout'),
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
