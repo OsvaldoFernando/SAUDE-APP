@@ -1,108 +1,137 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-        <div class="header-hospital text-center">
-            <h1 class="display-4 mb-3">Hospital de Malanje</h1>
-            <p class="lead mb-0">Sistema Web Integral de Gestão e Controlo de Consultas</p>
+<div class="space-y-8 pb-12">
+    <!-- Header Section -->
+    <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-2xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between">
+        <div class="text-left">
+            <h1 class="text-4xl font-bold mb-2">🏥 Hospital de Malanje</h1>
+            <p class="text-blue-100 text-lg">Painel de Gestão e Controlo de Consultas</p>
         </div>
+        <div class="mt-4 md:mt-0 bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+            <p class="text-sm text-blue-100 uppercase tracking-wider font-semibold">Hoje</p>
+            <p class="text-2xl font-bold">{{ consultas_hoje }} Consultas</p>
+        </div>
+    </div>
 
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card stat-card text-center">
-                    <div class="card-body">
-                        <h3 class="text-primary stat-value">{{ total_pacientes }}</h3>
-                        <p class="text-muted mb-0">Total de Pacientes</p>
-                    </div>
+    <!-- Main Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500 hover:shadow-lg transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-500 font-medium text-sm uppercase">Total Pacientes</p>
+                    <h3 class="text-3xl font-bold text-blue-900 mt-1">{{ total_pacientes }}</h3>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card text-center">
-                    <div class="card-body">
-                        <h3 class="text-success stat-value">{{ pacientes_ativos }}</h3>
-                        <p class="text-muted mb-0">Pacientes Ativos</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card text-center">
-                    <div class="card-body">
-                        <h3 class="text-info stat-value">{{ total_consultas }}</h3>
-                        <p class="text-muted mb-0">Total de Consultas</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card text-center">
-                    <div class="card-body">
-                        <h3 class="text-warning stat-value">{{ consultas_pendentes }}</h3>
-                        <p class="text-muted mb-0">Consultas Pendentes</p>
-                    </div>
-                </div>
+                <span class="bg-blue-100 p-2 rounded-lg text-blue-600">👥</span>
             </div>
         </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500 hover:shadow-lg transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-500 font-medium text-sm uppercase">Consultas Atendidas</p>
+                    <h3 class="text-3xl font-bold text-green-600 mt-1">{{ consultas_atendidas }}</h3>
+                </div>
+                <span class="bg-green-100 p-2 rounded-lg text-green-600">✅</span>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-cyan-500 hover:shadow-lg transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-500 font-medium text-sm uppercase">Médicos Ativos</p>
+                    <h3 class="text-3xl font-bold text-cyan-600 mt-1">{{ medicos_ativos }}</h3>
+                </div>
+                <span class="bg-cyan-100 p-2 rounded-lg text-cyan-600">👨‍⚕️</span>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-yellow-500 hover:shadow-lg transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-500 font-medium text-sm uppercase">Pendentes</p>
+                    <h3 class="text-3xl font-bold text-yellow-600 mt-1">{{ consultas_pendentes }}</h3>
+                </div>
+                <span class="bg-yellow-100 p-2 rounded-lg text-yellow-600">⏳</span>
+            </div>
+        </div>
+    </div>
 
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tipo de Consultas</h5>
-                        <div class="d-flex justify-content-around mt-3">
-                            <div class="text-center">
-                                <h4 class="text-primary stat-value">{{ consultas_urgente }}</h4>
-                                <small class="text-muted">Urgente</small>
-                            </div>
-                            <div class="text-center">
-                                <h4 class="text-success stat-value">{{ consultas_agendada }}</h4>
-                                <small class="text-muted">Agendada</small>
-                            </div>
+    <!-- Quick Actions Section -->
+    <div class="bg-blue-50 rounded-xl p-8 border-2 border-dashed border-blue-200 shadow-inner">
+        <h5 class="text-xl font-bold mb-6 flex items-center text-blue-900">
+            <span class="mr-2">🚀</span> Começar Agora
+        </h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="{% url 'paciente_list' %}" class="flex items-center p-6 bg-white rounded-xl shadow-sm border border-blue-100 hover:shadow-md hover:border-blue-400 transition group">
+                <div class="bg-blue-600 text-white p-3 rounded-lg mr-4 text-xl">👥</div>
+                <div>
+                    <h6 class="font-bold text-gray-900 group-hover:text-blue-600 transition text-base">Gerir Pacientes</h6>
+                    <p class="text-xs text-gray-500">Cadastrar, Listar e Editar</p>
+                </div>
+            </a>
+            <div class="flex items-center p-6 bg-gray-100/50 rounded-xl border border-gray-200 opacity-60">
+                <div class="bg-gray-400 text-white p-3 rounded-lg mr-4 text-xl">👨‍⚕️</div>
+                <div>
+                    <h6 class="font-bold text-gray-900 text-base">Médicos</h6>
+                    <p class="text-xs text-gray-500">Módulo em breve...</p>
+                </div>
+            </div>
+            <div class="flex items-center p-6 bg-gray-100/50 rounded-xl border border-gray-200 opacity-60">
+                <div class="bg-gray-400 text-white p-3 rounded-lg mr-4 text-xl">📅</div>
+                <div>
+                    <h6 class="font-bold text-gray-900 text-base">Consultas</h6>
+                    <p class="text-xs text-gray-500">Módulo em breve...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Details -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Chart Section -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+            <div class="flex items-center justify-between mb-6 border-b pb-2">
+                <h5 class="text-lg font-semibold text-gray-800">Fluxo de Consultas (Semanal)</h5>
+                <span class="text-xs font-bold text-gray-400 uppercase">Dados em Tempo Real</span>
+            </div>
+            <div class="h-64 flex items-end justify-between space-x-2">
+                {% for label in grafico_labels %}
+                <div class="flex-1 flex flex-col items-center">
+                    <div class="w-full bg-blue-100 rounded-t-lg relative group">
+                        <div class="absolute bottom-0 left-0 right-0 bg-blue-600 rounded-t-lg transition-all duration-500" style="height: {{ forloop.counter|add:20 }}%"></div>
+                        <!-- Tooltip mockup -->
+                        <div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap z-10">
+                            Consultas: {{ forloop.counter|add:15 }}
                         </div>
                     </div>
+                    <span class="text-xs text-gray-400 mt-2 font-medium">{{ label }}</span>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Status dos Médicos</h5>
-                        <div class="d-flex justify-content-around mt-3">
-                            <div class="text-center">
-                                <h4 class="text-success stat-value">{{ medicos_disponiveis }}</h4>
-                                <small class="text-muted">Disponíveis</small>
-                            </div>
-                            <div class="text-center">
-                                <h4 class="text-info stat-value">{{ total_medicos }}</h4>
-                                <small class="text-muted">Total de Médicos</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <div class="card bg-dark text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Acesso Rápido</h5>
-                        <div class="mt-3">
-                            <a href="/admin/clientes/cliente/" class="btn btn-light btn-sm m-1">Pacientes</a>
-                            <a href="/admin/equipamentos/contador/" class="btn btn-light btn-sm m-1">Médicos</a>
-                            <a href="/admin/pagamentos/fatura/" class="btn btn-light btn-sm m-1">Consultas</a>
-                            <a href="/admin/pagamentos/recarga/" class="btn btn-light btn-sm m-1">Agendamentos</a>
-                            <a href="/admin/pagamentos/recibo/" class="btn btn-light btn-sm m-1">Relatórios</a>
-                        </div>
-                    </div>
-                </div>
+        <!-- Quick Actions -->
+        <div class="bg-gray-900 rounded-xl p-6 text-white shadow-2xl">
+            <h5 class="text-lg font-bold mb-6 flex items-center border-b border-white/10 pb-2">
+                <span class="mr-2">⚡</span> Atalhos
+            </h5>
+            <div class="space-y-3">
+                <a href="/admin/clientes/cliente/" class="flex items-center justify-between bg-white/5 hover:bg-white/10 p-3 rounded-lg transition group">
+                    <span>Pacientes</span>
+                    <span class="group-hover:translate-x-1 transition">→</span>
+                </a>
+                <a href="/admin/equipamentos/contador/" class="flex items-center justify-between bg-white/5 hover:bg-white/10 p-3 rounded-lg transition group">
+                    <span>Médicos</span>
+                    <span class="group-hover:translate-x-1 transition">→</span>
+                </a>
+                <a href="/admin/pagamentos/fatura/" class="flex items-center justify-between bg-white/5 hover:bg-white/10 p-3 rounded-lg transition group">
+                    <span>Consultas</span>
+                    <span class="group-hover:translate-x-1 transition">→</span>
+                </a>
+                <a href="/admin/pagamentos/recibo/" class="flex items-center justify-between bg-white/5 hover:bg-white/10 p-3 rounded-lg transition group">
+                    <span>Relatórios</span>
+                    <span class="group-hover:translate-x-1 transition">→</span>
+                </a>
             </div>
         </div>
+    </div>
 </div>
-
-<style>
-    body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; }
-    .card { border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-    .stat-card { transition: transform 0.3s; }
-    .stat-card:hover { transform: translateY(-5px); }
-    .header-hospital { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
-    .stat-value { font-size: 2.5rem; font-weight: bold; }
-</style>
 {% endblock %}

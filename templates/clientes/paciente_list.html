@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="p-6 bg-gray-50 border-b flex justify-between items-center">
+        <h2 class="text-xl font-bold text-gray-800">Listagem de Pacientes</h2>
+        <a href="{% url 'paciente_create' %}" class="btn-primary flex items-center">
+            <span class="mr-2">+</span> Novo Paciente
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-bold">
+                <tr>
+                    <th class="px-6 py-3">Número</th>
+                    <th class="px-6 py-3">Nome</th>
+                    <th class="px-6 py-3">Telefone</th>
+                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for paciente in pacientes %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 font-mono text-sm">{{ paciente.numero_cliente }}</td>
+                    <td class="px-6 py-4 font-medium">{{ paciente.nome }}</td>
+                    <td class="px-6 py-4 text-gray-600">{{ paciente.telefone }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold 
+                            {% if paciente.status == 'ATIVO' %}bg-green-100 text-green-700
+                            {% elif paciente.status == 'INATIVO' %}bg-red-100 text-red-700
+                            {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                            {{ paciente.get_status_display }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 space-x-2">
+                        <a href="{% url 'paciente_update' paciente.pk %}" class="text-blue-600 hover:text-blue-900 font-medium">Editar</a>
+                        <a href="{% url 'paciente_delete' paciente.pk %}" class="text-red-600 hover:text-red-900 font-medium">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-10 text-center text-gray-500">Nenhum paciente cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

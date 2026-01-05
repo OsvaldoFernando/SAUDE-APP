@@ -4,257 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Hospital de Malanje</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 50px;
-            max-width: 400px;
-            width: 100%;
-        }
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .login-header h1 {
-            font-size: 2rem;
-            color: #1e3c72;
-            margin-bottom: 10px;
-        }
-        .login-header p {
-            color: #666;
-            margin: 0;
-        }
-        .form-control {
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-        }
-        .form-control:focus {
-            border-color: #1e3c72;
-            box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
-        }
-        .btn-login {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .btn-login:hover {
-            background: linear-gradient(135deg, #152a52 0%, #1f3f78 100%);
-            color: white;
-        }
-        .alert {
-            border-radius: 8px;
-            margin-bottom: 20px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer components {
+            .form-input {
+                @apply w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition duration-200 p-3 bg-gray-50 border;
+            }
+            .btn-login {
+                @apply w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>🏥 Hospital de Malanje</h1>
-            <p>Sistema de Gestão de Consultas</p>
+<body class="bg-gradient-to-br from-blue-900 to-blue-700 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-900 mb-2">🏥 Hospital de Malanje</h1>
+            <p class="text-gray-600">Sistema de Gestão de Consultas</p>
         </div>
 
         {% include 'includes/alerts.html' %}
 
-        <form method="post" id="loginForm" novalidate>
+        <form method="post" id="loginForm" class="space-y-6" novalidate>
             {% csrf_token %}
             
-            <!-- Campo Utilizador -->
-            <div class="mb-3">
-                <label for="id_username" class="form-label">👤 Utilizador</label>
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-gray-700 mb-1">👤 Utilizador</label>
                 <input 
                     type="text" 
-                    class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
                     id="id_username" 
                     name="username" 
                     placeholder="Introduza o seu utilizador"
+                    class="form-input {% if form.username.errors %}border-red-500{% endif %}"
                     required 
                     autofocus
-                    minlength="3"
-                    maxlength="150"
                     autocomplete="username">
                 {% if form.username.errors %}
-                    <div class="invalid-feedback d-block">
-                        {% for error in form.username.errors %}
-                            <strong>{{ error }}</strong>
-                        {% endfor %}
-                    </div>
+                    <p class="mt-1 text-sm text-red-600">
+                        {% for error in form.username.errors %}{{ error }}{% endfor %}
+                    </p>
                 {% endif %}
             </div>
 
-            <!-- Campo Senha -->
-            <div class="mb-3">
-                <label for="id_password" class="form-label">🔐 Senha</label>
+            <div>
+                <label for="id_password" class="block text-sm font-medium text-gray-700 mb-1">🔐 Senha</label>
                 <input 
                     type="password" 
-                    class="form-control {% if form.password.errors %}is-invalid{% endif %}" 
                     id="id_password" 
                     name="password" 
                     placeholder="Introduza a sua senha"
+                    class="form-input {% if form.password.errors %}border-red-500{% endif %}"
                     required
-                    minlength="6"
                     autocomplete="current-password">
                 {% if form.password.errors %}
-                    <div class="invalid-feedback d-block">
-                        {% for error in form.password.errors %}
-                            <strong>{{ error }}</strong>
-                        {% endfor %}
-                    </div>
+                    <p class="mt-1 text-sm text-red-600">
+                        {% for error in form.password.errors %}{{ error }}{% endfor %}
+                    </p>
                 {% endif %}
             </div>
 
-            <!-- Validação de Formulário -->
             {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert">
-                    <strong>❌ Erro no Formulário:</strong>
-                    {% for error in form.non_field_errors %}
-                        <div>{{ error }}</div>
-                    {% endfor %}
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded text-red-700 text-sm">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
                 </div>
             {% endif %}
 
-            <button type="submit" class="btn btn-primary btn-login" id="submitBtn">
+            <button type="submit" class="btn-login flex items-center justify-center" id="submitBtn">
                 <span id="btnText">Entrar</span>
-                <span id="btnLoader" style="display:none;">
-                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span id="btnLoader" class="hidden flex items-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                     A autenticar...
                 </span>
             </button>
         </form>
 
-        <hr class="my-4">
-        <div class="text-center" style="font-size: 0.9rem; color: #666;">
-            <p><strong>Perfis disponíveis:</strong></p>
-            <p>👨‍💼 Administrador<br>👨‍⚕️ Médico<br>👨‍💻 Atendente/Recepção</p>
+        <div class="mt-8 pt-8 border-t border-gray-100 text-center text-sm text-gray-500">
+            <p class="font-semibold mb-2">Perfis disponíveis:</p>
+            <div class="flex justify-around">
+                <span>👨‍💼 Admin</span>
+                <span>👨‍⚕️ Médico</span>
+                <span>👨‍💻 Recepção</span>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Validação do Formulário
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const username = document.getElementById('id_username').value.trim();
             const password = document.getElementById('id_password').value;
 
-            // Validar campos vazios
-            if (!username) {
-                e.preventDefault();
-                showValidationError('username', '❌ Campo Utilizador é obrigatório');
-                return false;
-            }
-
-            if (!password) {
-                e.preventDefault();
-                showValidationError('password', '❌ Campo Senha é obrigatório');
-                return false;
-            }
-
-            // Validar comprimento mínimo
-            if (username.length < 3) {
-                e.preventDefault();
-                showValidationError('username', '❌ Utilizador deve ter pelo menos 3 caracteres');
-                return false;
-            }
-
-            if (password.length < 6) {
-                e.preventDefault();
-                showValidationError('password', '❌ Senha deve ter pelo menos 6 caracteres');
-                return false;
-            }
-
-            // Mostrar loading
-            document.getElementById('btnText').style.display = 'none';
-            document.getElementById('btnLoader').style.display = 'inline';
-            document.getElementById('submitBtn').disabled = true;
-        });
-
-        function showValidationError(fieldId, message) {
-            const field = document.getElementById('id_' + fieldId);
-            field.classList.add('is-invalid');
-            
-            // Remover mensagem anterior se existir
-            const existingError = field.nextElementSibling;
-            if (existingError && existingError.classList.contains('invalid-feedback')) {
-                existingError.remove();
-            }
-
-            // Adicionar nova mensagem de erro
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'invalid-feedback d-block';
-            errorDiv.innerHTML = '<strong>' + message + '</strong>';
-            field.parentNode.insertBefore(errorDiv, field.nextSibling);
-        }
-
-        // Remover erro ao focar no campo
-        document.getElementById('id_username').addEventListener('focus', function() {
-            this.classList.remove('is-invalid');
-            const error = this.nextElementSibling;
-            if (error && error.classList.contains('invalid-feedback')) {
-                error.remove();
+            if (username && password) {
+                document.getElementById('btnText').classList.add('hidden');
+                document.getElementById('btnLoader').classList.remove('hidden');
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').classList.add('opacity-50', 'cursor-not-allowed');
             }
         });
 
-        document.getElementById('id_password').addEventListener('focus', function() {
-            this.classList.remove('is-invalid');
-            const error = this.nextElementSibling;
-            if (error && error.classList.contains('invalid-feedback')) {
-                error.remove();
-            }
-        });
-
-        // Auto-dismiss alerts após 5 segundos
-        document.querySelectorAll('.alert').forEach(alert => {
-            setTimeout(() => {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
-            }, 5000);
-        });
+        // Auto-dismiss alerts
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
     </script>
-
-    <style>
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-        
-        .invalid-feedback {
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: block;
-        }
-
-        .btn:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-
-        .form-control:focus {
-            border-color: #1e3c72;
-            box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
-        }
-
-        .form-control.is-invalid:focus {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
-    </style>
 </body>
 </html>

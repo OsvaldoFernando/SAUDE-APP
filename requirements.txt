@@ -11,3 +11,10 @@ pillow
 psycopg2-binary
 python-decouple
 reportlab
+django
+django-filter
+djangorestframework
+pillow
+psycopg2-binary
+python-decouple
+reportlab

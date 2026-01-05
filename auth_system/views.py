@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
@@ -7,6 +7,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.http import HttpRequest
 from .models import UserProfile, LoginAttempt, ActivityLog
+
+User = get_user_model()
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

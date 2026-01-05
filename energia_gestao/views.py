@@ -10,15 +10,23 @@ from django.utils import timezone
 @login_required(login_url='login')
 def home(request):
     hoje = timezone.now().date()
+    # Mapeando os modelos para a nova terminologia (Hospital)
+    # Cliente -> Paciente
+    # Contador -> Médico
+    # Fatura -> Consulta
+    # Recarga -> Agendamento
+    
     context = {
         'total_pacientes': Cliente.objects.count(),
         'pacientes_ativos': Cliente.objects.filter(status='ATIVO').count(),
-        'consultas_urgente': Cliente.objects.filter(tipo_cliente='PRE_PAGO').count(),
-        'consultas_agendada': Cliente.objects.filter(tipo_cliente='POS_PAGO').count(),
-        'total_medicos': Contador.objects.count(),
-        'medicos_disponiveis': Contador.objects.filter(status='ATIVO').count(),
+        'consultas_hoje': Fatura.objects.filter(data_emissao=hoje).count(),
+        'consultas_atendidas': Fatura.objects.filter(status='PAGO').count(),
+        'medicos_ativos': Contador.objects.filter(status='ATIVO').count(),
+        'total_consultas': Fatura.objects.count(),
         'consultas_pendentes': Fatura.objects.filter(status='PENDENTE').count(),
-        'total_consultas': Recarga.objects.filter(data_recarga__date=hoje).count(),
+        # Dados para o gráfico (últimos 7 dias)
+        'grafico_labels': ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+        'grafico_data': [12, 19, 3, 5, 2, 3, 10], # Placeholder - pode ser dinamizado depois
     }
     return render(request, 'home.html', context)
 
