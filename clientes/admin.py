@@ -3,22 +3,19 @@ from .models import Cliente, Contrato
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ['numero_cliente', 'nome', 'nif', 'tipo_cliente', 'status', 'saldo_atual', 'data_cadastro']
-    list_filter = ['tipo_cliente', 'status', 'data_cadastro']
-    search_fields = ['numero_cliente', 'nome', 'nif', 'bi', 'telefone', 'email']
+    list_display = ['numero_cliente', 'nome', 'sexo', 'bi', 'status', 'data_cadastro']
+    list_filter = ['sexo', 'status', 'data_cadastro']
+    search_fields = ['numero_cliente', 'nome', 'bi', 'telefone', 'email']
     readonly_fields = ['numero_cliente', 'data_cadastro', 'data_atualizacao']
     fieldsets = (
         ('Informações Básicas', {
-            'fields': ('numero_cliente', 'nome', 'nif', 'bi')
+            'fields': ('numero_cliente', 'nome', 'sexo', 'data_nascimento')
         }),
         ('Contacto', {
             'fields': ('morada', 'telefone', 'email')
         }),
-        ('Tipo e Status', {
-            'fields': ('tipo_cliente', 'status', 'saldo_atual')
-        }),
-        ('Observações', {
-            'fields': ('observacoes',)
+        ('Status', {
+            'fields': ('status', 'observacoes')
         }),
         ('Datas', {
             'fields': ('data_cadastro', 'data_atualizacao'),
@@ -26,10 +23,7 @@ class ClienteAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(Contrato)
-class ContratoAdmin(admin.ModelAdmin):
-    list_display = ['codigo_contrato', 'cliente', 'status', 'tarifa_kwh', 'data_inicio', 'data_fim']
-    list_filter = ['status', 'data_inicio']
-    search_fields = ['codigo_contrato', 'cliente__nome', 'cliente__numero_cliente']
-    readonly_fields = ['codigo_contrato', 'data_criacao']
-    raw_id_fields = ['cliente']
+# ContratoAdmin removido ou desativado para Administrador não marcar consultas através de contratos
+# @admin.register(Contrato)
+# class ContratoAdmin(admin.ModelAdmin):
+#     ...

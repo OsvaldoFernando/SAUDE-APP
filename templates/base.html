@@ -16,34 +16,87 @@
             .badge-info {
                 @apply bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full;
             }
+            .form-input {
+                @apply w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-gray-50 min-h-screen">
     <nav class="bg-gray-900 shadow-lg mb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a class="text-white font-bold text-xl flex items-center" href="/">
-                        <span class="mr-2">🏥</span> Hospital de Malanje
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <a class="text-white font-bold text-xl flex items-center leading-tight" href="/">
+                        <span class="mr-3 text-3xl">🏥</span>
+                        <div>
+                            <div class="text-sm uppercase tracking-wider text-gray-400 font-normal">Hospital de</div>
+                            <div class="text-xl">Malanje</div>
+                        </div>
                     </a>
                 </div>
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="{% url 'home' %}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="{% url 'paciente_list' %}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Pacientes</a>
-                    <a href="/admin/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Administração</a>
+                
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="{% url 'paciente_list' %}" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">Pacientes</a>
+                    <a href="{% url 'medico_list' %}" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">Médicos</a>
+                    <a href="{% url 'especialidade_list' %}" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">Especialidades</a>
+                    
+                    <div class="h-6 w-px bg-gray-700 mx-2"></div>
+                    
+                    <a href="{% url 'consulta_list' %}" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">Consultas</a>
+                    <a href="{% url 'atendimento_list' %}" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">Atendimentos</a>
+                    
+                    <!-- Relatórios Dropdown -->
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors">
+                            Relatórios
+                            <svg class="ml-1 h-4 w-4 fill-current opacity-60" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                        </button>
+                        <div class="absolute left-0 w-56 bg-white rounded-md shadow-xl py-2 z-50 hidden group-hover:block border border-gray-200 mt-0">
+                            <div class="px-4 py-1 text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 mb-1">Análises</div>
+                            <a href="{% url 'relatorio_diario' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Consultas Diárias</a>
+                            <a href="{% url 'relatorio_medico' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Produtividade por Médico</a>
+                            <a href="{% url 'relatorio_pacientes' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Pacientes Atendidos</a>
+                            <a href="{% url 'relatorio_mensal' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Relatório Gerencial Mensal</a>
+                        </div>
+                    </div>
+
+                    <div class="h-6 w-px bg-gray-700 mx-2"></div>
                 </div>
+
                 <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
-                        <div class="flex items-center space-x-3 text-white text-sm">
-                            <span class="badge-info">
-                                {{ user.first_name|default:user.username }}
-                            </span>
+                        <!-- Menu Perfil -->
+                        <div class="relative group">
+                            <button class="flex items-center space-x-3 bg-gray-800 border border-gray-700 pl-1.5 pr-3 py-1.5 rounded-full text-blue-400 text-sm font-semibold hover:bg-gray-700 transition-colors">
+                                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-blue-500/50">
+                                    <img src="/static/images/admin_profile.png" alt="Admin" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                                    {{ user.username }}
+                                    <svg class="ml-2 h-4 w-4 fill-current opacity-60" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                                </div>
+                            </button>
+                            <div class="absolute right-0 w-48 bg-white rounded-md shadow-xl py-2 z-50 hidden group-hover:block border border-gray-200 mt-0">
+                                <div class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 mb-1">Minha Conta</div>
+                                {% if user.is_superuser %}
+                                <a href="{% url 'usuario_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center">
+                                    <span class="mr-2">👥</span> Gerir Usuários
+                                </a>
+                                {% endif %}
+                                <a href="#" data-modal-target="profileModal" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center">
+                                    <span class="mr-2">👤</span> Ver Perfil
+                                </a>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <a href="#" data-modal-target="logoutModal" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center">
+                                    <span class="mr-2">🚪</span> Sair
+                                </a>
+                            </div>
                         </div>
-                        <a href="{% url 'logout' %}" class="btn-outline-light text-sm">Sair</a>
                     {% else %}
-                        <a href="{% url 'login' %}" class="btn-outline-light text-sm">Login</a>
+                        <a href="{% url 'login' %}" class="btn-primary text-sm">Login</a>
                     {% endif %}
                 </div>
             </div>
@@ -54,6 +107,250 @@
         {% include 'includes/alerts.html' %}
         {% block content %}{% endblock %}
     </main>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" data-modal-close="logoutModal"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Confirmar Saída</h3>
+                    <p class="text-sm text-gray-500">Tem certeza que deseja encerrar sua sessão no sistema?</p>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <a href="{% url 'logout' %}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Sair do Sistema
+                    </a>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" data-modal-close="logoutModal">
+                        Permanecer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" data-modal-close="profileModal"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <span class="mr-2">👤</span> Perfil do Usuário
+                        </h3>
+                        <button type="button" class="text-gray-400 hover:text-gray-500" data-modal-close="profileModal">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="space-y-6">
+                        <!-- Foto de Perfil -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative group">
+                                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500/20">
+                                    <img id="profilePreview" src="/static/images/admin_profile.png" alt="Profile" class="w-full h-full object-cover">
+                                </div>
+                                <label for="photoUpload" class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 shadow-lg transition-transform hover:scale-110">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <input type="file" id="photoUpload" class="hidden" accept="image/*">
+                                </label>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Clique para alterar a foto de perfil</p>
+                        </div>
+
+                        <!-- Logo do Sistema -->
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center uppercase tracking-wider">
+                                <span class="mr-2">🏥</span> Logotipo do Sistema
+                            </h4>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 bg-white rounded border flex items-center justify-center p-2">
+                                    <span class="text-3xl">🏥</span>
+                                </div>
+                                <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">Alterar Logo do Hospital</button>
+                            </div>
+                        </div>
+
+                        <!-- Informações Básicas -->
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wider border-b pb-1">Informações da Conta</h4>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome de Usuário</label>
+                                    <input type="text" value="{{ user.username }}" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">E-mail</label>
+                                    <input type="email" value="{{ user.email }}" placeholder="seu@email.com" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nova Senha</label>
+                                        <input type="password" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Confirmar Senha</label>
+                                        <input type="password" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="showSaveMessage()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Salvar Alterações
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" data-modal-close="profileModal">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" data-modal-close="passwordModal"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <span class="mr-2">🔑</span> Alterar Senha
+                        </h3>
+                        <button type="button" class="text-gray-400 hover:text-gray-500" data-modal-close="passwordModal">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Senha Atual</label>
+                            <input type="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nova Senha</label>
+                            <input type="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Confirmar Nova Senha</label>
+                            <input type="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" data-modal-close="passwordModal">
+                        Atualizar Senha
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" data-modal-close="passwordModal">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal Logic
+            const modalTargets = document.querySelectorAll('[data-modal-target]');
+            const modalCloses = document.querySelectorAll('[data-modal-close]');
+
+            modalTargets.forEach(target => {
+                target.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const modalId = target.getAttribute('data-modal-target');
+                    document.getElementById(modalId).classList.remove('hidden');
+                });
+            });
+
+            modalCloses.forEach(close => {
+                close.addEventListener('click', () => {
+                    const modalId = close.getAttribute('data-modal-close');
+                    document.getElementById(modalId).classList.add('hidden');
+                });
+            });
+
+            // Photo Preview
+            const photoUpload = document.getElementById('photoUpload');
+            const profilePreview = document.getElementById('profilePreview');
+
+            if (photoUpload) {
+                photoUpload.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            profilePreview.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        function showSaveMessage() {
+            console.log('Botão clicado, iniciando showSaveMessage');
+            
+            // Fecha a modal
+            const modal = document.getElementById('profileModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                console.log('Modal fechada');
+            }
+            
+            // Cria a notificação
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 z-[9999] transform transition-all duration-500 translate-y-[-100px] pointer-events-none';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                <div class="bg-green-600 text-white px-6 py-4 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center space-x-4 border border-green-400/30 backdrop-blur-sm bg-opacity-95">
+                    <div class="bg-white/20 p-2 rounded-full">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm uppercase tracking-wider">Sucesso!</p>
+                        <p class="text-sm opacity-90">Alterações salvas com sucesso.</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            console.log('Notificação adicionada ao body');
+
+            // Animação de entrada
+            setTimeout(() => {
+                notification.classList.remove('translate-y-[-100px]');
+                console.log('Animação de entrada iniciada');
+            }, 10);
+
+            // Remove após 4 segundos
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-[-20px]');
+                console.log('Iniciando animação de saída');
+                setTimeout(() => {
+                    notification.remove();
+                    console.log('Notificação removida');
+                }, 500);
+            }, 4000);
+        }
+    </script>
 
     {% block extra_js %}{% endblock %}
 </body>

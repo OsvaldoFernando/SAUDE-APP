@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div class="p-6 bg-gray-900 text-white flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold flex items-center">
+                <span class="mr-3">👥</span> Gestão de Usuários
+            </h2>
+            <p class="text-gray-400 text-sm mt-1">Administre os acessos ao sistema do Hospital</p>
+        </div>
+        <a href="/admin/auth/user/add/" class="btn-primary flex items-center">
+            <span class="mr-2">+</span> Novo Usuário
+        </a>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Usuário</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nome Completo</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">E-mail</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Data de Cadastro</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for usuario in usuarios %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                {{ usuario.username|first|upper }}
+                            </div>
+                            <span class="ml-3 font-medium text-gray-900">{{ usuario.username }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                        {{ usuario.get_full_name|default:"-" }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        {{ usuario.email|default:"-" }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if usuario.is_active %}
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 flex items-center w-fit">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span> Ativo
+                        </span>
+                        {% else %}
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 flex items-center w-fit">
+                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span> Inativo
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ usuario.date_joined|date:"d/m/Y H:i" }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium">
+                        <a href="/admin/auth/user/{{ usuario.id }}/change/" class="text-blue-600 hover:text-blue-900 mr-3">Editar</a>
+                        {% if usuario.id != user.id %}
+                        <a href="/admin/auth/user/{{ usuario.id }}/delete/" class="text-red-600 hover:text-red-900">Excluir</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">
+                        Nenhum usuário cadastrado além de você.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -16,17 +16,18 @@ class Cliente(models.Model):
     
     numero_cliente = models.CharField(max_length=20, unique=True, editable=False)
     nome = models.CharField(max_length=200)
-    nif = models.CharField(max_length=20, unique=True, verbose_name='NIF')
+    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')], default='M')
+    data_nascimento = models.DateField(null=True, blank=True)
     bi = models.CharField(max_length=20, unique=True, verbose_name='BI')
-    morada = models.TextField()
     telefone = models.CharField(
         max_length=15,
         validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Número de telefone inválido")]
     )
+    morada = models.TextField(verbose_name='Endereço')
     email = models.EmailField(blank=True, null=True)
-    tipo_cliente = models.CharField(max_length=10, choices=TIPO_CLIENTE_CHOICES, default='PRE_PAGO')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ATIVO')
-    saldo_atual = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    # Removidos campos de energia
+    # saldo_atual = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     data_cadastro = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
     observacoes = models.TextField(blank=True, null=True)
